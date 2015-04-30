@@ -2,8 +2,7 @@ import scipy.sparse as sparse
 import scipy.sparse.linalg as linalg
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import animation
-
+import matplotlib.animation as animation
 c1 = 5.j        # i*hbar*dt/(4*m*dx^2)
 c2 = 1.j        # i*dt/(2*hbar)
 k = 5.
@@ -36,12 +35,14 @@ psi[0] = 0.
 psi[n-1] = 0.
 
 # start loop
-plt.figure()
-for i in range(10):
+fig2, ax = plt.subplots()
+ims = []
+for i in range(100):
     [psi, garbage] = linalg.bicgstab(A, B*psi)
-    plt.plot(x, np.abs(psi)**2)
-
+    im, = plt.plot(x, np.abs(psi)**2, 'b')
+    ims.append([im])
+im_ani = animation.ArtistAnimation(fig2, ims, interval=100, repeat_delay=3000, blit=True)
+plt.show()
 #####
 print "norm at the end: "
 print sum(abs(psi)**2)*dx
-plt.show()

@@ -20,12 +20,16 @@ psi[round(N/2 + n/2)] = 1.0
 fig2 = plt.figure()
 ax = fig2.add_subplot(111,projection='3d')
 ims = []
-x=np.linspace(0,1,n)
-y=x
+x= np.linspace(0,1,n)
+y = x
+xplot , yplot = np.meshgrid(x,y)
+# x = np.repeat(x,n)
+# x = x.reshape(n,n)
+# y = x.transpose()
 for i in range(100):
     [psi, garbage] = linalg.bicgstab(A, B*psi)
     psi2 = psi.reshape(n,n)
-    im = ax.plot_surface(x,y,np.abs(psi2)**2),
+    im = ax.plot_surface(xplot,yplot,np.abs(psi2)**2),
     ims.append(im)
 im_ani = animation.ArtistAnimation(fig2, ims, interval=1000, repeat_delay=3000, blit=True)
 plt.show()

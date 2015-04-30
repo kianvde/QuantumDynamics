@@ -3,11 +3,15 @@ import scipy.sparse.linalg as linalg
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
-c1 = 5.j        # i*hbar*dt/(4*m*dx^2)
-c2 = 1.j        # i*dt/(2*hbar)
+
+dt = 2.0
+n = 100         # number of points
+L = 10.0
+dx = L/n
+c1 = 1.j * dt / (4. * dx**2)    # i*hbar*dt/(4*m*dx^2)
+c2 = 1.j * dt / 2.              # i*dt/(2*hbar)
 k = 5.
-n = 10         # number of points
-dx = 1.0/n
+bound = 0
 
 # set a potential
 v = 1.0*np.zeros(n)
@@ -16,23 +20,30 @@ v = 1.0*np.zeros(n)
 
 A = sparse.diags(1.+2.*c1+c2*v, 0) - c1*sparse.eye(n,n,1) - c1*sparse.eye(n,n,-1)
 B = sparse.diags(1.-2.*c1-c2*v, 0) + c1*sparse.eye(n,n,1) + c1*sparse.eye(n,n,-1)
-A[0,0:] = 0.
-A[n-1,0:] = 0.
-A[0,0] = 1.
-A[n-1,n-1] = 1.
-B[0,0:] = 0.
-B[n-1,0:] = 0.
-B[0,0] = 1.
-B[n-1,n-1] = 1.
+if bound == 1:
+    A[0,0:] = 0.
+    A[n-1,0:] = 0.
+    A[0,0] = 1.
+    A[n-1,n-1] = 1.
+    B[0,0:] = 0.
+    B[n-1,0:] = 0.
+    B[0,0] = 1.
+    B[n-1,n-1] = 1.
+else:
+    A[0,n-1] = -c1
+    A[n-1,0] = -c1
+    B[0,n-1] = c1
+    B[n-1,0] = c1
+
 
 # generate x-coordinates and initial wave-function
-mean = 5.0
-sigma = 0.05
-x = np.linspace(0,10,n)
+mean = L/2
+sigma = 1.0
+x = np.linspace(0,L,n)
 psi = np.exp(-(x-mean)**2/(2*sigma**2)) * np.exp(1.j*k*x)    # phase factor guessed
 psi /= np.sqrt(sum(abs(psi)**2*dx)) # normalize the wave function
-psi[0] = 0.
-psi[n-1] = 0.
+# psi[0] = 0.
+# psi[n-1] = 0.
 
 # start loop
 fig2, ax = plt.subplots()

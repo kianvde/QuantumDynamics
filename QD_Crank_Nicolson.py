@@ -30,10 +30,10 @@ if bound == 1:
     B[0,0] = 1.
     B[n-1,n-1] = 1.
 else:
-    A[0,n-1] = -c1
-    A[n-1,0] = -c1
-    B[0,n-1] = c1
-    B[n-1,0] = c1
+    A[0,n-2] = -c1
+    A[n-1,1] = -c1
+    B[0,n-2] = c1
+    B[n-1,1] = c1
 
 
 # generate x-coordinates and initial wave-function
@@ -52,6 +52,7 @@ for i in range(100):
     [psi, garbage] = linalg.bicgstab(A, B*psi)
     im, = plt.plot(x, np.abs(psi)**2, 'b')
     ims.append([im])
+    print psi[0] , psi[-1]
 im_ani = animation.ArtistAnimation(fig2, ims, interval=100, repeat_delay=3000, blit=True)
 plt.show()
 #####

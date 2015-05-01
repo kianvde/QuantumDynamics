@@ -11,14 +11,14 @@ L = 60.0
 k = 5.
 n = np.floor(L/dx)
 
-# two constants following from two simplify the expressions
+# two constants to simplify the expressions
 c1 = 1.j * dt / (4. * dx**2)    # i*hbar*dt/(4*m*dx^2)
 c2 = 1.j * dt / 2.              # i*dt/(2*hbar)
 
 # generate x-coordinates and initial wave-function
 x = np.linspace(0,L,n)
 psi = np.exp(-0.1*(x-L/4)**2) * np.exp(1.j*k*x)
-psi /= np.sqrt(sum(abs(psi)**2*dx)) # normalize the wave function
+psi /= np.sqrt(sum(abs(psi)**2*dx))  # normalize the wave function
 
 # set a potential
 v = 1.0*np.zeros(n)
@@ -55,11 +55,8 @@ print sum(abs(psi[3000:])**2)*dx
 print "approximation Transmission: ",
 print sum(abs(psi[3000:])**2)*dx/(sum(abs(psi)**2)*dx)
 
-# animate after enter #
-try:
-    input("Press enter to continue")
-except SyntaxError:
-    pass
+try: input("continue to animation")
+except SyntaxError: pass
 im_ani = animation.ArtistAnimation(fig2, ims, interval=100, repeat_delay=3000, blit=True)
 plt.show()
 

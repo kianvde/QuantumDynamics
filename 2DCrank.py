@@ -35,14 +35,19 @@ ax = fig2.add_subplot(111, projection='3d')
 ims = []
 # np.set_printoptions(precision=2,threshold=np.nan)
 for _ in range(1):
-    [psi, garbage] = linalg.bicgstab(A, B*psi)
-    psiPlot = np.abs(psi.reshape(n,n))**2
 
     # print to check if psiPlot is constant along the first dimension
-    print np.amax(abs(np.abs(psiPlot - psiPlot[30, :])))
+    psiPlot = np.abs(psi.reshape(n,n))**2
+    print np.amax(abs(np.abs((psiPlot - psiPlot[30, :])/psiPlot)))
+    print np.min(psiPlot)
+    print np.max(psiPlot)
 
     im = ax.plot_surface(xp, yp, psiPlot),
     ims.append(im)
+
+    [psi, garbage] = linalg.bicgstab(A, B*psi)
+
+
 
 # problems with animation; should be a gaussian wave packet along the x direction and constant
 # in the y direction.

@@ -39,12 +39,12 @@ plt.vlines([L*(0.5-28/3000), L*(0.5+28/3000)], 0, 1)
 ims = []
 for i in range(200):
 
-    # use the sparse stabilized biconjugate gradient method to solve the matrix eq
-    [psi, garbage] = linalg.bicgstab(A, B*psi)
-
     if i%5 == 0:
         im, = plt.plot(x[2000:4000], np.abs(psi[2000:4000])**2, 'b')
         ims.append([im])
+
+    # use the sparse stabilized biconjugate gradient method to solve the matrix eq
+    [psi, garbage] = linalg.bicgstab(A, B*psi)
 
 print "norm at the end: ",
 print sum(abs(psi)**2)*dx

@@ -2,14 +2,13 @@ import scipy.sparse as sparse
 import scipy.sparse.linalg as linalg
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
 
 # simulation constants
 dt = 0.025
-dx = 1.
+dx = .5
 L = 60.0
-k = 5.
+k = 5
 n = np.floor(L/dx)
 N = n**2
 
@@ -25,35 +24,26 @@ B = (1.-4.*c1)*sparse.identity(N) \
 
 # generate x-coordinates and initial wave-function
 x = np.linspace(0,L,n)
-xp , yp = np.meshgrid(x,x)  # plotting coordinate grids
-# psi = np.exp(-0.1*((np.tile(x, n)-L/4)**2 + (np.repeat(x, n)-L/2)**2)) * np.exp(1.j*k*np.tile(x, n))  # gaussian peak
-psi = np.exp(-0.1*((np.tile(x, n)-L/4)**2)) * np.exp(1.j*k*np.tile(x, n))  # gaussian front
+xGrid , yGrid = np.meshgrid(x,x)  # plotting coordinate grids
+
+# psi = np.exp(-0.1*((np.tile(x, n)-L/4)**2)) * np.exp(1.j*k*np.tile(x, n))  # gaussian front
+psi = np.exp(-0.1*((np.tile(x, n)-L/4)**2 + (np.repeat(x, n)-L/2)**2)) \
+      * np.exp(1.j*k*np.tile(x, n))  # gaussian peak
+
 psi /= np.sqrt(sum(abs(psi)**2*dx**2))  # normalize the wave function
 
-fig2 = plt.figure()
-ax = fig2.add_subplot(111, projection='3d')
-ims = []
-# np.set_printoptions(precision=2,threshold=np.nan)
-for _ in range(1):
+# initialize figure for plotting
+plt.ion()
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.set_zlim(0,2.*np.amax(np.abs(psi)**2))
 
-    # print to check if psiPlot is constant along the first dimension
-    psiPlot = np.abs(psi.reshape(n,n))**2
-    print np.amax(abs(np.abs((psiPlot - psiPlot[30, :])/psiPlot)))
-    print np.min(psiPlot)
-    print np.max(psiPlot)
+for i in range(1000):
 
-    im = ax.plot_surface(xp, yp, psiPlot),
-    ims.append(im)
+    if i%5 == 0:
+        psiPlot = np.abs(psi.reshape(n,n)**2)
+        wireFrame = ax.plot_wireframe(xGrid, yGrid, psiPlot, rstride = 2, cstride = 2)
+        plt.pause(.001)
+        ax.collections.remove(wireFrame)
 
     [psi, garbage] = linalg.bicgstab(A, B*psi)
-
-
-
-# problems with animation; should be a gaussian wave packet along the x direction and constant
-# in the y direction.
-
-# the array np.abs(psi.reshape(n,n))**2 is correct though, see print
-try: input("continue to animation")
-except SyntaxError: pass
-im_ani = animation.ArtistAnimation(fig2, ims, interval=1000, repeat_delay=3000, blit=True)
-plt.show()

@@ -5,7 +5,7 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
 # simulation constants
-dt = 0.025
+dt = 0.05
 dx = .5
 L = 60.0
 k = 15.
@@ -52,7 +52,7 @@ ax.set_zlim(0,2.*np.amax(np.abs(psi)**2))
 crit = 0.
 psiPlot = np.abs(psi.reshape(n,n)**2)
 Inter = psiPlot[:,np.round(n/2)]
-for i in range(1000):
+for i in range(500):
 
     if i%10 == 0:
         psiPlot = np.abs(psi.reshape(n,n)**2)

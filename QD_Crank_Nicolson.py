@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
 import sys
+from time import gmtime, strftime
 
 
 # Crank-Nicolson method QD time evolution simulation of a gaussian
@@ -12,8 +13,8 @@ def main():
 
     ## simulation constants ##
 
-    # epsilon is the fraction of the wave energy divided by v0
-    epsilon = np.linspace(0.8, 3.0, 221)
+    # epsilon is E/v0
+    epsilon = np.linspace(0.8, 3.0, 301)
 
     v0 = 6.125  # barrier height,
     a = 2.      # barrier width
@@ -24,6 +25,7 @@ def main():
 
     animate_and_print = False   # animate the time evolution
     plotTransmission = True     # plot the transmission
+    saveTransmission = True     # save the transmission
     shape = "blok"              # pick from 'triangle' and 'blok'
 
     T = np.zeros(len(epsilon))
@@ -46,7 +48,7 @@ def main():
         else:
             psi, T[i] = run(A, B, x, psi, a, L, dx)
 
-    if plotTransmission: plot_transmission(epsilon, T)
+    if plotTransmission: plot_transmission(epsilon, T, shape, saveTransmission)
 
 
 ###############
@@ -135,15 +137,17 @@ def print_norms(psi, a, L, dx):
     print sum(abs(psi[int(round((L - a)/(2*dx))):])**2)*dx/(sum(abs(psi)**2)*dx)
 
 # plots the transmission after the run
-def plot_transmission(epsilon, T):
+def plot_transmission(epsilon, T, shape, saveTransmission):
     plt.figure()
-    plt.title("Transmission of a gaussian wave packet \n through a rectangular potential barrier")
+    plt.title("Transmission of a gaussian wave packet \n through a {s} potential barrier".format(s=shape))
     plt.xlabel('epsilon = E/$V_0$')
     plt.ylabel('Transmission')
-    plt.axis((0, np.max(epsilon), 0)), 1.1
+    plt.axis((0, np.max(epsilon), 0, 1.1))
     plt.axhline(y=1, linewidth=2, color='r')
     plt.vlines(1, 0, 1, color='g', linestyle='--')
     plt.plot(epsilon, T)
+    if saveTransmission:
+        plt.savefig("{s}.pdf".format(s=strftime("%d-%m-%Y_%H-%M", gmtime())))
     plt.show()
 
 ##############

@@ -26,7 +26,7 @@ def main():
     animate_and_print = False   # animate the time evolution
     plotTransmission = True     # plot the transmission
     saveTransmission = True     # save the transmission
-    shape = "blok"              # pick from 'triangle' and 'blok'
+    shape = "block"              # pick from 'triangle' and 'blok'
 
     T = np.zeros(len(epsilon))
     x = np.linspace(0, L, np.floor(L/dx))
@@ -147,7 +147,7 @@ def plot_transmission(epsilon, T, shape, saveTransmission):
     plt.vlines(1, 0, 1, color='g', linestyle='--')
     plt.plot(epsilon, T)
     if saveTransmission:
-        plt.savefig("{s}.pdf".format(s=strftime("%d-%m-%Y_%H-%M", gmtime())))
+        plt.savefig("{s}.png".format(s=strftime("%d-%m-%Y_%H-%M", gmtime())))
     plt.show()
 
 
